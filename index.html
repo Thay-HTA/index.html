@@ -51,7 +51,9 @@
     .sbtn { width: 100%; padding: 14px; background: #f5c842; color: #1a2e4a; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; font-family: 'Segoe UI', Arial, sans-serif; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; letter-spacing: .3px; transition: background .15s; }
     .sbtn:hover { background: #e0b230; }
     .sbtn:active { transform: scale(.98); }
+    .sbtn.loading { background: #ccc; color: #666; pointer-events: none; }
     .sbtn.done { background: #065f46; color: #fff; pointer-events: none; }
+    .sbtn.error { background: #c0142a; color: #fff; }
     @media (max-width: 480px) {
       .grid2 { grid-template-columns: 1fr; }
       .meta-bar { flex-wrap: wrap; gap: 6px; }
@@ -90,20 +92,20 @@
     <div class="sc-body">
       <div class="field">
         <label class="lbl">Email <span class="req">*</span></label>
-        <input type="email" placeholder="example@gmail.com">
+        <input type="email" id="f-email" placeholder="example@gmail.com">
       </div>
       <div class="field">
         <label class="lbl">Họ và tên <span class="req">*</span></label>
-        <input type="text" placeholder="Nguyễn Văn A">
+        <input type="text" id="f-hoten" placeholder="Nguyễn Văn A">
       </div>
       <div class="grid2">
         <div class="field">
           <label class="lbl">Ngày sinh <span class="req">*</span></label>
-          <input type="text" placeholder="1/9/2009">
+          <input type="text" id="f-ngaysinh" placeholder="1/9/2009">
         </div>
         <div class="field">
           <label class="lbl">Lớp hiện tại <span class="req">*</span></label>
-          <select>
+          <select id="f-lop">
             <option value="">— Chọn lớp —</option>
             <option>10L1</option><option>10L2</option><option>10L3</option><option>10L4</option>
             <option>11L1</option><option>11L2</option><option>11L3</option><option>11L4</option>
@@ -113,26 +115,26 @@
       </div>
       <div class="field">
         <label class="lbl">Số điện thoại học sinh</label>
-        <input type="tel" placeholder="09xxxxxxxx">
+        <input type="tel" id="f-sdths" placeholder="09xxxxxxxx">
         <div class="hint">Không bắt buộc. Dùng để nhắn nhở lịch học, bài tập.</div>
       </div>
       <div class="field">
         <label class="lbl">Số điện thoại phụ huynh (có Zalo)</label>
-        <input type="tel" placeholder="09xxxxxxxx">
+        <input type="tel" id="f-sdtph" placeholder="09xxxxxxxx">
         <div class="warn"><i class="ti ti-alert-triangle"></i>Ưu tiên số có Zalo để thầy trao đổi tình hình học tập và điểm số với gia đình.</div>
       </div>
       <div class="field">
         <label class="lbl">Học sinh trường nào? <span class="req">*</span></label>
         <div class="opts" id="sg">
-          <label class="opt"><div class="opt-dot"></div><input type="radio" name="sch" value="1" style="display:none">THPT Nga Sơn</label>
-          <label class="opt"><div class="opt-dot"></div><input type="radio" name="sch" value="2" style="display:none">THPT Ba Đình</label>
-          <label class="opt"><div class="opt-dot"></div><input type="radio" name="sch" value="3" style="display:none">THPT Mai Anh Tuấn</label>
-          <label class="opt"><div class="opt-dot"></div><input type="radio" name="sch" value="4" style="display:none">Trường khác</label>
+          <label class="opt"><div class="opt-dot"></div><input type="radio" name="sch" value="THPT Nga Sơn" style="display:none">THPT Nga Sơn</label>
+          <label class="opt"><div class="opt-dot"></div><input type="radio" name="sch" value="THPT Ba Đình" style="display:none">THPT Ba Đình</label>
+          <label class="opt"><div class="opt-dot"></div><input type="radio" name="sch" value="THPT Mai Anh Tuấn" style="display:none">THPT Mai Anh Tuấn</label>
+          <label class="opt"><div class="opt-dot"></div><input type="radio" name="sch" value="Trường khác" style="display:none">Trường khác</label>
         </div>
       </div>
       <div class="field" id="sch-other" style="display:none">
         <label class="lbl">Tên trường (ghi rõ)</label>
-        <input type="text" placeholder="Ghi rõ tên trường của em">
+        <input type="text" id="f-truong-khac" placeholder="Ghi rõ tên trường của em">
         <div class="hint">Bỏ qua nếu đã chọn trường ở trên.</div>
       </div>
     </div>
@@ -152,11 +154,11 @@
         <label class="lbl">Khối thi / Tổ hợp xét tuyển dự định</label>
         <div class="hint" style="margin-bottom:7px">Có thể chọn nhiều khối</div>
         <div class="opts" id="kg">
-          <label class="opt"><div class="opt-sq"></div><input type="checkbox" style="display:none">A00 — Toán, Vật lý, Hóa học</label>
-          <label class="opt"><div class="opt-sq"></div><input type="checkbox" style="display:none">A01 — Toán, Vật lý, Tiếng Anh</label>
-          <label class="opt"><div class="opt-sq"></div><input type="checkbox" style="display:none">C01 — Ngữ văn, Toán, Vật lý</label>
-          <label class="opt"><div class="opt-sq"></div><input type="checkbox" style="display:none">HSA / TSA (Đánh giá năng lực – tư duy)</label>
-          <label class="opt"><div class="opt-sq"></div><input type="checkbox" style="display:none">Chưa xác định — nhờ thầy tư vấn</label>
+          <label class="opt"><div class="opt-sq"></div><input type="checkbox" value="A00 — Toán, Vật lý, Hóa học" style="display:none">A00 — Toán, Vật lý, Hóa học</label>
+          <label class="opt"><div class="opt-sq"></div><input type="checkbox" value="A01 — Toán, Vật lý, Tiếng Anh" style="display:none">A01 — Toán, Vật lý, Tiếng Anh</label>
+          <label class="opt"><div class="opt-sq"></div><input type="checkbox" value="C01 — Ngữ văn, Toán, Vật lý" style="display:none">C01 — Ngữ văn, Toán, Vật lý</label>
+          <label class="opt"><div class="opt-sq"></div><input type="checkbox" value="HSA / TSA" style="display:none">HSA / TSA (Đánh giá năng lực – tư duy)</label>
+          <label class="opt"><div class="opt-sq"></div><input type="checkbox" value="Chưa xác định" style="display:none">Chưa xác định — nhờ thầy tư vấn</label>
         </div>
       </div>
 
@@ -166,11 +168,11 @@
         <label class="lbl">Chỉ tiêu / Mục tiêu học tập mong muốn <span class="req">*</span></label>
         <div class="hint" style="margin-bottom:7px">Có thể chọn nhiều mục tiêu.</div>
         <div class="opts" id="gg">
-          <label class="opt"><div class="opt-sq"></div><input type="checkbox" style="display:none">Đạt 8+ môn Vật lý kỳ thi Tốt nghiệp THPT</label>
-          <label class="opt"><div class="opt-sq"></div><input type="checkbox" style="display:none">Đạt 9+ môn Vật lý kỳ thi Tốt nghiệp THPT</label>
-          <label class="opt"><div class="opt-sq"></div><input type="checkbox" style="display:none">Chinh phục Đánh giá năng lực HSA (ĐHQG Hà Nội)</label>
-          <label class="opt"><div class="opt-sq"></div><input type="checkbox" style="display:none">Chinh phục Đánh giá tư duy TSA (Bách Khoa Hà Nội)</label>
-          <label class="opt"><div class="opt-sq"></div><input type="checkbox" style="display:none">Ôn tập bổ sung kiến thức, cải thiện điểm học bạ</label>
+          <label class="opt"><div class="opt-sq"></div><input type="checkbox" value="Đạt 8+ môn Vật lý thi Tốt nghiệp THPT" style="display:none">Đạt 8+ môn Vật lý kỳ thi Tốt nghiệp THPT</label>
+          <label class="opt"><div class="opt-sq"></div><input type="checkbox" value="Đạt 9+ môn Vật lý thi Tốt nghiệp THPT" style="display:none">Đạt 9+ môn Vật lý kỳ thi Tốt nghiệp THPT</label>
+          <label class="opt"><div class="opt-sq"></div><input type="checkbox" value="Chinh phục HSA (ĐHQG Hà Nội)" style="display:none">Chinh phục Đánh giá năng lực HSA (ĐHQG Hà Nội)</label>
+          <label class="opt"><div class="opt-sq"></div><input type="checkbox" value="Chinh phục TSA (Bách Khoa HN)" style="display:none">Chinh phục Đánh giá tư duy TSA (Bách Khoa Hà Nội)</label>
+          <label class="opt"><div class="opt-sq"></div><input type="checkbox" value="Ôn tập, cải thiện điểm học bạ" style="display:none">Ôn tập bổ sung kiến thức, cải thiện điểm học bạ</label>
         </div>
       </div>
 
@@ -180,9 +182,9 @@
         <label class="lbl">Tự đánh giá năng lực Vật lý hiện tại <span class="req">*</span></label>
         <div class="warn" style="margin-bottom:8px"><i class="ti ti-bolt"></i>Quan trọng! Thầy dùng câu này để xếp đúng lớp. Hãy chọn thật sự khách quan nhé.</div>
         <div class="opts" id="lg">
-          <label class="opt"><div class="opt-dot"></div><input type="radio" name="lv" value="1" style="display:none">Khá – Giỏi: Nắm chắc lý thuyết, làm được bài vận dụng cao</label>
-          <label class="opt"><div class="opt-dot"></div><input type="radio" name="lv" value="2" style="display:none">Cơ bản: Hiểu lý thuyết, còn yếu ở bài tập khó</label>
-          <label class="opt"><div class="opt-dot"></div><input type="radio" name="lv" value="3" style="display:none">Đang mất gốc: Chưa hiểu lý thuyết, cần học lại từ đầu</label>
+          <label class="opt"><div class="opt-dot"></div><input type="radio" name="lv" value="Khá – Giỏi: Nắm chắc lý thuyết, làm được bài vận dụng cao" style="display:none">Khá – Giỏi: Nắm chắc lý thuyết, làm được bài vận dụng cao</label>
+          <label class="opt"><div class="opt-dot"></div><input type="radio" name="lv" value="Cơ bản: Hiểu lý thuyết, còn yếu ở bài tập khó" style="display:none">Cơ bản: Hiểu lý thuyết, còn yếu ở bài tập khó</label>
+          <label class="opt"><div class="opt-dot"></div><input type="radio" name="lv" value="Đang mất gốc: Chưa hiểu lý thuyết, cần học lại từ đầu" style="display:none">Đang mất gốc: Chưa hiểu lý thuyết, cần học lại từ đầu</label>
         </div>
       </div>
 
@@ -192,8 +194,8 @@
         <label class="lbl">Đăng ký mô hình lớp học <span class="req">*</span></label>
         <div class="hint" style="margin-bottom:7px">Đa dạng mô hình các lớp phù hợp với nguyện vọng của học sinh</div>
         <div class="opts" id="mg">
-          <label class="opt"><div class="opt-dot"></div><input type="radio" name="md" value="1" style="display:none">Lớp HAVL1 — Sĩ số từ 21 đến 25 hs — 40.000đ/buổi (đã bao gồm tiền tài liệu)</label>
-          <label class="opt"><div class="opt-dot"></div><input type="radio" name="md" value="2" style="display:none">Lớp HAVL2 — Sĩ số từ 16 đến 20 hs — 45.000đ/buổi (đã bao gồm tiền tài liệu)</label>
+          <label class="opt"><div class="opt-dot"></div><input type="radio" name="md" value="HAVL1 — 21-25 hs — 40.000đ/buổi" style="display:none">Lớp HAVL1 — Sĩ số từ 21 đến 25 hs — 40.000đ/buổi (đã bao gồm tiền tài liệu)</label>
+          <label class="opt"><div class="opt-dot"></div><input type="radio" name="md" value="HAVL2 — 16-20 hs — 45.000đ/buổi" style="display:none">Lớp HAVL2 — Sĩ số từ 16 đến 20 hs — 45.000đ/buổi (đã bao gồm tiền tài liệu)</label>
         </div>
       </div>
 
@@ -202,7 +204,7 @@
       <div class="field">
         <label class="lbl">Nguyện vọng hoặc khó khăn em muốn chia sẻ với thầy</label>
         <div class="hint" style="margin-bottom:7px">Em có đang sợ chuyên đề nào không? Hay cần thầy hỗ trợ thêm điều gì? Thầy đọc hết nhé!</div>
-        <textarea placeholder="VD: Em đang rất sợ phần điện xoay chiều, hay bị mất căn bản từ lớp 11..."></textarea>
+        <textarea id="f-nguyenvong" placeholder="VD: Em đang rất sợ phần điện xoay chiều, hay bị mất căn bản từ lớp 11..."></textarea>
       </div>
 
     </div>
@@ -220,6 +222,8 @@
 </div>
 
 <script>
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzFW05ZItzU79dkq59IZTg1vKTzlbY-9ZPmPE9h-4_Tjk4SbJ1BtjmRv0tCz2v_cTSntA/exec';
+
   document.querySelectorAll('.opt').forEach(el => {
     el.addEventListener('click', e => {
       const inp = el.querySelector('input');
@@ -228,7 +232,7 @@
         const nm = inp.name;
         document.querySelectorAll(`.opt input[name="${nm}"]`).forEach(i => i.closest('.opt').classList.remove('on'));
         el.classList.add('on');
-        if (nm === 'sch') document.getElementById('sch-other').style.display = inp.value === '4' ? 'block' : 'none';
+        if (nm === 'sch') document.getElementById('sch-other').style.display = inp.value === 'Trường khác' ? 'block' : 'none';
       } else {
         e.preventDefault();
         inp.checked = !inp.checked;
@@ -237,10 +241,75 @@
     });
   });
 
-  function doSubmit() {
-    const b = document.getElementById('sbtn');
-    b.classList.add('done');
-    b.innerHTML = '<i class="ti ti-circle-check"></i> Đã gửi thành công — thầy sẽ liên hệ sớm!';
+  function getChecked(groupId) {
+    return Array.from(document.querySelectorAll(`#${groupId} input:checked`))
+      .map(i => i.value).join(', ');
+  }
+
+  function getRadio(name) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : '';
+  }
+
+  function getTruong() {
+    const r = getRadio('sch');
+    if (r === 'Trường khác') {
+      const other = document.getElementById('f-truong-khac').value.trim();
+      return other || 'Trường khác';
+    }
+    return r;
+  }
+
+  async function doSubmit() {
+    const btn = document.getElementById('sbtn');
+
+    const email = document.getElementById('f-email').value.trim();
+    const hoten = document.getElementById('f-hoten').value.trim();
+    const ngaysinh = document.getElementById('f-ngaysinh').value.trim();
+    const lop = document.getElementById('f-lop').value.trim();
+
+    if (!email || !hoten || !ngaysinh || !lop) {
+      alert('Vui lòng điền đầy đủ các trường bắt buộc (*)');
+      return;
+    }
+
+    const data = {
+      email,
+      hoten,
+      ngaysinh,
+      lop,
+      sdths: document.getElementById('f-sdths').value.trim(),
+      sdtph: document.getElementById('f-sdtph').value.trim(),
+      truong: getTruong(),
+      khoi: getChecked('kg'),
+      muctieu: getChecked('gg'),
+      nangluc: getRadio('lv'),
+      mohinh: getRadio('md'),
+      nguyenvong: document.getElementById('f-nguyenvong').value.trim()
+    };
+
+    btn.classList.add('loading');
+    btn.innerHTML = '<i class="ti ti-loader"></i> Đang gửi...';
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      btn.classList.remove('loading');
+      btn.classList.add('done');
+      btn.innerHTML = '<i class="ti ti-circle-check"></i> Đã gửi thành công — thầy sẽ liên hệ sớm!';
+    } catch (err) {
+      btn.classList.remove('loading');
+      btn.classList.add('error');
+      btn.innerHTML = '<i class="ti ti-alert-circle"></i> Gửi thất bại — vui lòng thử lại';
+      setTimeout(() => {
+        btn.classList.remove('error');
+        btn.innerHTML = '<i class="ti ti-send"></i> Gửi đăng ký';
+      }, 3000);
+    }
   }
 </script>
 </body>
